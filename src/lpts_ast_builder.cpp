@@ -1481,7 +1481,7 @@ private:
 					break;
 				}
 			}
-			return get_node;
+			return unique_ptr<AstNode>(std::move(get_node));
 		}
 
 		//----------------------------------------------------------------------
@@ -2073,7 +2073,7 @@ private:
 				                      join_node->mark_membership_comparisons, join_node->mark_membership_lhs,
 				                      join_node->mark_membership_rhs, join_node->mark_join_has_equality);
 			}
-			return join_node;
+			return unique_ptr<AstNode>(std::move(join_node));
 		}
 
 		//----------------------------------------------------------------------
@@ -2272,7 +2272,7 @@ private:
 					}
 				}
 			}
-			return distinct_node;
+			return unique_ptr<AstNode>(std::move(distinct_node));
 		}
 
 		//----------------------------------------------------------------------
@@ -2659,7 +2659,7 @@ private:
 			delim_join_node->mark_membership_lhs = std::move(mark_membership_lhs);
 			delim_join_node->mark_membership_rhs = std::move(mark_membership_rhs);
 			delim_join_node->mark_join_has_equality = mark_join_has_equality;
-			return delim_join_node;
+			return unique_ptr<AstNode>(std::move(delim_join_node));
 		}
 
 		case LogicalOperatorType::LOGICAL_PIVOT:

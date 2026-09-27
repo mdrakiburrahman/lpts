@@ -981,7 +981,7 @@ private:
 			join_node->mark_membership_lhs = dj.mark_membership_lhs;
 			join_node->mark_membership_rhs = dj.mark_membership_rhs;
 			join_node->mark_join_has_equality = dj.mark_join_has_equality;
-			return join_node;
+			return unique_ptr<CteNode>(std::move(join_node));
 		}
 
 		// DelimGet: leaf node — creates a SELECT DISTINCT CTE from the outer left CTE.
@@ -1168,7 +1168,7 @@ private:
 			join_node->mark_membership_lhs = join.mark_membership_lhs;
 			join_node->mark_membership_rhs = join.mark_membership_rhs;
 			join_node->mark_join_has_equality = join.mark_join_has_equality;
-			return join_node;
+			return unique_ptr<CteNode>(std::move(join_node));
 		}
 
 		if (type == "PositionalJoin") {
@@ -1192,7 +1192,7 @@ private:
 				// only the union's arity (see UnionNode::ToQuery).
 				union_node->left_columns = children_column_lists[0];
 				union_node->right_columns = children_column_lists[1];
-				return union_node;
+				return unique_ptr<CteNode>(std::move(union_node));
 			}
 			if (children_names.size() == 1) {
 				return make_uniq<ProjectNode>(my_index, u.cte_column_names, children_names[0], children_column_lists[0],
@@ -1220,7 +1220,7 @@ private:
 					                                        u.is_union_all);
 					final_union->left_columns = prev_columns;
 					final_union->right_columns = children_column_lists[ci];
-					return final_union;
+					return unique_ptr<CteNode>(std::move(final_union));
 				}
 			}
 			// Shouldn't reach here, but just in case
@@ -1271,7 +1271,7 @@ private:
 			distinct_node->is_distinct_on = d.is_distinct_on;
 			distinct_node->distinct_on_targets = d.distinct_on_targets;
 			distinct_node->distinct_on_orders = d.distinct_on_orders;
-			return distinct_node;
+			return unique_ptr<CteNode>(std::move(distinct_node));
 		}
 
 		// Operators not yet implemented.
